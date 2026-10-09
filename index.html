@@ -2,31 +2,199 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07090c">
 <title>Rubén Palenzuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f4f2ee;--card:#fff;--ink:#1d1d1f;--muted:#6b6b70;--accent:#0a66c2}
-  @media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1f1f22;--ink:#f2f2f2;--muted:#a0a0a6}}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px}
-  main{width:100%;max-width:360px;background:var(--card);border-radius:20px;padding:32px 24px;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.08)}
-  .foto{width:112px;height:112px;border-radius:50%;object-fit:cover;margin:0 auto 16px;display:block;background:#ddd}
-  h1{font-size:1.5rem;margin:0 0 6px}
-  p{margin:0 0 28px;color:var(--muted);line-height:1.4}
-  a.btn{display:block;padding:14px;border-radius:12px;text-decoration:none;font-weight:600;margin-bottom:12px}
-  .pri{background:var(--ink);color:var(--card)}
-  .sec{background:var(--accent);color:#fff}
-  small{display:block;margin-top:20px;color:var(--muted)}
+:root{
+  --bg:#07090c; --glass:rgba(16,20,26,.72); --line:rgba(255,215,0,.18);
+  --txt:#e6e6e6; --dim:#7d8590; --gold:#ffd700; --var:#9cdcfe; --str:#ce9178; --cm:#6a9955; --ok:#4ec9b0;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:"JetBrains Mono",ui-monospace,monospace;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+canvas#net{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.scan{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 35%,transparent 40%,rgba(0,0,0,.75) 100%)}
+main{position:relative;z-index:2;max-width:400px;margin:0 auto;padding:28px 16px 40px;min-height:100%;display:flex;flex-direction:column;justify-content:center}
+
+/* boot */
+#boot{font-size:12.5px;line-height:1.7;color:var(--dim);min-height:120px}
+#boot .p{color:var(--gold)} #boot .ok{color:var(--ok)}
+.cur{display:inline-block;width:7px;height:1.05em;background:var(--gold);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* card */
+#card{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;margin-top:8px}
+#card.on{opacity:1;transform:none}
+.win{border:1px solid var(--line);border-radius:14px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(255,215,0,.04),0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(255,215,0,.05);overflow:hidden}
+.bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.06);font-size:11.5px;color:var(--dim)}
+.bar i{width:9px;height:9px;border-radius:50%;background:#2c3138}
+.bar i:first-child{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.bar .f{margin-left:6px}
+.bar .live{margin-left:auto;color:var(--ok);display:flex;align-items:center;gap:6px}
+.bar .live:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+
+.body{padding:24px 16px 20px}
+.head{display:flex;align-items:center;gap:16px}
+.ph{position:relative;width:88px;height:88px;flex:none}
+.ph:before{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),transparent 30%,transparent 70%,var(--gold));animation:spin 6s linear infinite}
+.ph:after{content:"";position:absolute;inset:-2px;border-radius:50%;background:var(--bg)}
+.ph img{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(.95)}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.5rem;line-height:1.1;letter-spacing:-.01em}
+h1 .g{color:var(--gold)}
+.loc{margin-top:6px;font-size:11.5px;color:var(--dim)}
+.loc b{color:var(--ok);font-weight:500}
+
+pre{margin:22px 0 4px;font:clamp(11px,3.05vw,13px)/1.75 "JetBrains Mono",monospace;white-space:normal;min-height:122px}
+.in{padding-left:4ch;text-indent:-2ch}
+.b{color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.45)}.k{color:var(--var)}.s{color:var(--str)}.c{color:var(--cm)}
+
+.acts{margin-top:18px;display:grid;gap:10px}
+a.btn{position:relative;display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-radius:10px;text-decoration:none;font:600 14.5px "Space Grotesk",sans-serif;letter-spacing:.01em;overflow:hidden;transition:transform .12s ease}
+a.btn:active{transform:scale(.98)}
+a.btn small{font:500 11.5px "JetBrains Mono",monospace;opacity:.75}
+.pri{background:var(--gold);color:#0b0b0b;box-shadow:0 0 24px rgba(255,215,0,.25)}
+.pri:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.5s ease-in-out infinite 1.5s}
+@keyframes shine{0%{left:-60%}35%,100%{left:130%}}
+.sec{border:1px solid rgba(255,255,255,.12);color:var(--txt);background:rgba(255,255,255,.02)}
+
+footer{margin-top:18px;display:flex;justify-content:space-between;font-size:10.5px;color:var(--dim)}
+footer .c{color:var(--cm)}
+
+
+/* ondas NFC */
+.ph .wave{position:absolute;inset:0;border-radius:50%;border:2px solid var(--gold);opacity:0;z-index:0;pointer-events:none}
+#card.on .ph .wave{animation:wave 1.6s ease-out forwards}
+#card.on .ph .wave:nth-child(2){animation-delay:.25s}
+#card.on .ph .wave:nth-child(3){animation-delay:.5s}
+@keyframes wave{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+/* glitch */
+h1{position:relative}
+.gl{position:relative;display:inline-block}
+.gl:before,.gl:after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;opacity:0;white-space:pre}
+#card.on .gl:before{color:#ff2a6d;animation:g1 .7s steps(2) .35s 1}
+#card.on .gl:after{color:#05d9e8;animation:g2 .7s steps(2) .35s 1}
+#card.on .gl{animation:g0 .7s steps(2) .35s 1}
+@keyframes g0{0%,100%{transform:none}20%{transform:translateX(-2px) skewX(8deg)}40%{transform:translateX(2px)}60%{transform:skewX(-6deg)}}
+@keyframes g1{0%,100%{opacity:0}10%,70%{opacity:.8;clip-path:inset(10% 0 55% 0);transform:translate(-3px,-1px)}40%{clip-path:inset(60% 0 5% 0);transform:translate(3px,1px)}}
+@keyframes g2{0%,100%{opacity:0}10%,70%{opacity:.8;clip-path:inset(55% 0 10% 0);transform:translate(3px,1px)}40%{clip-path:inset(5% 0 60% 0);transform:translate(-3px,-1px)}}
+
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<canvas id="net" aria-hidden="true"></canvas>
+<div class="scan"></div><div class="vig"></div>
+
 <main>
-  <img class="foto" src="foto.jpg" alt="Rubén Palenzuela" onerror="this.style.display='none'">
-  <h1>Rubén Palenzuela</h1>
-  <p>De la logística a la IA aplicada.<br>Aprendo construyendo.</p>
-  <a class="btn pri" href="ruben.vcf" download>Guardar contacto</a>
-  <a class="btn sec" href="https://www.linkedin.com/in/rub%C3%A9n-palenzuela-imdisim">LinkedIn</a>
-  <small>Arona · Tenerife</small>
+  <div id="boot" aria-hidden="true"></div>
+
+  <section id="card">
+    <div class="win">
+      <div class="bar"><i></i><i></i><i></i><span class="f">ruben.json</span><span class="live">nfc</span></div>
+      <div class="body">
+        <div class="head">
+          <div class="ph"><span class="wave"></span><span class="wave"></span><span class="wave"></span><img src="foto.jpg" alt="Rubén Palenzuela" onerror="this.parentNode.style.display='none'"></div>
+          <div>
+            <h1><span class="gl" data-t="Rubén">Rubén</span><br><span class="gl" data-t="Palenzuela">Palenzuela</span><span class="g">_</span></h1>
+            <div class="loc"><b>●</b> Arona · Tenerife</div>
+          </div>
+        </div>
+        <pre id="code"></pre>
+        <div class="acts">
+          <a class="btn pri" href="ruben.vcf" download>Guardar contacto <small>.vcf ↓</small></a>
+          <a class="btn sec" href="https://www.linkedin.com/in/rub%C3%A9n-palenzuela-imdisim">LinkedIn <small>→</small></a>
+        </div>
+      </div>
+    </div>
+    <footer><span class="c">// gracias por acercarte</span><span>v2.0</span></footer>
+  </section>
 </main>
+
+<script>
+/* ---- red neuronal de fondo ---- */
+(()=>{
+  const c=document.getElementById('net'),x=c.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w,h,dpr,pts=[];
+  function size(){
+    dpr=Math.min(devicePixelRatio||1,2);
+    w=c.width=innerWidth*dpr; h=c.height=innerHeight*dpr;
+    const n=Math.round(Math.min(70,(innerWidth*innerHeight)/9000));
+    pts=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25*dpr,vy:(Math.random()-.5)*.25*dpr,g:Math.random()<.12}));
+  }
+  function draw(){
+    x.clearRect(0,0,w,h);
+    const R=130*dpr;
+    for(let i=0;i<pts.length;i++){
+      const a=pts[i];
+      if(!reduce){a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>w)a.vx*=-1;if(a.y<0||a.y>h)a.vy*=-1;}
+      for(let j=i+1;j<pts.length;j++){
+        const b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+        if(d<R){x.strokeStyle=(a.g||b.g)?`rgba(255,215,0,${.22*(1-d/R)})`:`rgba(156,220,254,${.10*(1-d/R)})`;x.lineWidth=dpr*.8;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}
+      }
+      x.fillStyle=a.g?'rgba(255,215,0,.9)':'rgba(156,220,254,.45)';
+      x.beginPath();x.arc(a.x,a.y,(a.g?1.8:1.2)*dpr,0,7);x.fill();
+    }
+    if(!reduce)requestAnimationFrame(draw);
+  }
+  addEventListener('resize',size);size();draw();
+})();
+
+/* ---- arranque tipo terminal + código tecleado ---- */
+(()=>{
+  const boot=document.getElementById('boot'),card=document.getElementById('card'),code=document.getElementById('code');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lines=[
+    ['<span class="p">$</span> nfc --read',220],
+    ['  señal detectada ............ <span class="ok">ok</span>',260],
+    ['  cargando ruben.json ........ <span class="ok">ok</span>',260],
+    ['  handshake .................. <span class="ok">200</span>',200]
+  ];
+  const json=[
+    '<div><span class="b">{</span></div>',
+    '<div class="in"><span class="k">"de"</span>: <span class="s">"almacén y logística"</span>,</div>',
+    '<div class="in"><span class="k">"hacia"</span>: <span class="s">"IA aplicada"</span>,</div>',
+    '<div class="in"><span class="k">"método"</span>: <span class="s">"aprender trabajando y construyendo"</span></div>',
+    '<div><span class="b">}</span></div>'
+  ];
+  let done=false;
+  function finish(){
+    if(done)return;done=true;
+    boot.style.display='none';card.classList.add('on');code.innerHTML=json.join('');
+  }
+  if(reduce){finish();return;}
+  addEventListener('pointerdown',finish,{once:true});
+
+  let i=0;
+  (function next(){
+    if(done)return;
+    if(i<lines.length){
+      boot.innerHTML=lines.slice(0,i+1).map(l=>l[0]).join('<br>')+' <span class="cur"></span>';
+      setTimeout(next,lines[i++][1]);
+    }else{
+      boot.style.transition='opacity .4s';boot.style.opacity='0';
+      setTimeout(()=>{if(done)return;boot.style.display='none';card.classList.add('on');typeJSON();},380);
+    }
+  })();
+
+  function typeJSON(){
+    let li=0;
+    (function row(){
+      if(done)return;
+      if(li>=json.length){done=true;return;}
+      code.innerHTML=json.slice(0,li+1).join('')+(li<json.length-1?'<span class="cur"></span>':'');
+      li++;setTimeout(row,170);
+    })();
+  }
+})();
+</script>
 </body>
 </html>

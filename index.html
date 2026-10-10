@@ -107,7 +107,10 @@ h1{position:relative}
 .more{margin:14px auto 0;display:flex;align-items:center;gap:8px;background:none;border:0;color:var(--dim);font:500 12px "JetBrains Mono",monospace;cursor:pointer;padding:6px 10px}
 .more i{font-style:normal;transition:transform .3s}
 .more[aria-expanded="true"] i{transform:rotate(180deg)}
-.xtra{display:grid;gap:10px;margin-top:10px}
+.xtra{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.4,0,.2,1)}
+.xtra.open{grid-template-rows:1fr}
+.xin{overflow:hidden;min-height:0;display:grid;gap:10px}
+.xtra.open .xin{padding-top:10px}
 .mw{border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(0,0,0,.25);padding:12px 14px;opacity:0;transform:translateY(10px) scale(.98);transition:opacity .4s,transform .4s}
 .mw.vis{opacity:1;transform:none}
 .mt{font-size:11px;color:var(--dim);margin-bottom:6px}.mt b{color:var(--gold);font-weight:400}
@@ -143,15 +146,15 @@ a.gl2 small{font-size:11px;color:var(--dim)}
           <a class="btn pri" href="ruben.vcf" download>Guardar contacto <small>.vcf ↓</small></a>
           <a class="btn sec" href="https://www.linkedin.com/in/rub%C3%A9n-palenzuela-imdisim">LinkedIn <small>→</small></a>
         </div>
-        <button class="more" id="more" type="button" aria-expanded="false"><span>ver más</span> <i>↓</i></button>
-        <div class="xtra" id="xtra" hidden>
+        <button class="more stg" id="more" type="button" aria-expanded="false"><span>ver más</span> <i>↓</i></button>
+        <div class="xtra" id="xtra"><div class="xin">
           <div class="mw"><div class="mt"><b>●</b> ahora.md</div><p>Dando el giro de la logística a la IA aplicada. Abierto a proyectos donde la IA trabaje en procesos reales.</p></div>
           <div class="mw"><div class="mt"><b>●</b> aprendiendo.md</div><p>Agentes de IA para procesos operativos · Copilot Studio · Power Automate</p></div>
           <div class="mw"><div class="mt"><b>●</b> código abierto</div>
             <a class="gl2" href="https://github.com/RPalGar/DORIS-starter-kit"><span>DORIS starter kit</span><small>memoria en texto plano para asistentes de IA →</small></a>
             <a class="gl2" href="https://github.com/RPalGar"><span>GitHub</span><small>@RPalGar →</small></a>
           </div>
-        </div>
+        </div></div>
       </div>
     </div>
     <footer class="stg"><span class="c">// gracias por acercarte</span><span>v2.0</span></footer>
@@ -200,7 +203,7 @@ a.gl2 small{font-size:11px;color:var(--dim)}
     '<div class="in"><span class="k">"método"</span>: <span class="s">"aprender trabajando y construyendo"</span></div>',
     '<div><span class="b">}</span></div>'
   ];
-  const stg=['.ph','.nm','.loc','#code','.acts','footer'].map(q=>$(q));
+  const stg=['.ph','.nm','.loc','#code','.acts','footer','#more'].map(q=>$(q));
   const names=[...document.querySelectorAll('.gl')];
   let done=false,timers=[];
   const T=(f,ms)=>timers.push(setTimeout(()=>{if(!done)f()},ms));
@@ -230,7 +233,7 @@ a.gl2 small{font-size:11px;color:var(--dim)}
   T(()=>{stg[1].classList.add('vis');names.forEach(scramble);},R+450);         // nombre descifrándose
   T(()=>stg[2].classList.add('vis'),R+900);
   T(()=>{stg[3].classList.add('vis');typeJSON();},R+1050);
-  T(()=>{stg[4].classList.add('vis');stg[5].classList.add('vis');},R+1750);
+  T(()=>{stg[4].classList.add('vis');stg[5].classList.add('vis');stg[6].classList.add('vis');},R+1750);
   T(()=>{card.classList.add('done');if(navigator.vibrate)navigator.vibrate(18);done=true;},R+1900);
 
   function scramble(el){
@@ -257,10 +260,10 @@ a.gl2 small{font-size:11px;color:var(--dim)}
     b.setAttribute('aria-expanded',String(!open));
     b.querySelector('span').textContent=open?'ver más':'ver menos';
     const ws=[...x.querySelectorAll('.mw')];
-    if(open){ws.forEach(w=>w.classList.remove('vis'));setTimeout(()=>x.hidden=true,300);return;}
-    x.hidden=false;
-    ws.forEach((w,i)=>setTimeout(()=>w.classList.add('vis'),60+i*160));
-    setTimeout(()=>x.scrollIntoView({behavior:'smooth',block:'nearest'}),200);
+    if(open){ws.forEach(w=>w.classList.remove('vis'));setTimeout(()=>x.classList.remove('open'),200);return;}
+    x.classList.add('open');
+    ws.forEach((w,i)=>setTimeout(()=>w.classList.add('vis'),150+i*160));
+    setTimeout(()=>x.scrollIntoView({behavior:'smooth',block:'nearest'}),450);
   });
 })();
 </script>

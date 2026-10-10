@@ -103,6 +103,20 @@ h1{position:relative}
 .ph.rev .scanl{animation:scanl .7s cubic-bezier(.4,0,.2,1) forwards}
 @keyframes scanl{0%{top:0;opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
 
+/* segunda capa */
+.more{margin:14px auto 0;display:flex;align-items:center;gap:8px;background:none;border:0;color:var(--dim);font:500 12px "JetBrains Mono",monospace;cursor:pointer;padding:6px 10px}
+.more i{font-style:normal;transition:transform .3s}
+.more[aria-expanded="true"] i{transform:rotate(180deg)}
+.xtra{display:grid;gap:10px;margin-top:10px}
+.mw{border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(0,0,0,.25);padding:12px 14px;opacity:0;transform:translateY(10px) scale(.98);transition:opacity .4s,transform .4s}
+.mw.vis{opacity:1;transform:none}
+.mt{font-size:11px;color:var(--dim);margin-bottom:6px}.mt b{color:var(--gold);font-weight:400}
+.mw p{font:14px/1.5 "Space Grotesk",sans-serif;color:var(--txt)}
+a.gl2{display:flex;flex-direction:column;gap:2px;padding:8px 0;text-decoration:none;color:var(--txt);border-top:1px solid rgba(255,255,255,.06)}
+a.gl2:first-of-type{border-top:0}
+a.gl2 span{font:600 14px "Space Grotesk",sans-serif;color:var(--gold)}
+a.gl2 small{font-size:11px;color:var(--dim)}
+
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -128,6 +142,15 @@ h1{position:relative}
         <div class="acts stg">
           <a class="btn pri" href="ruben.vcf" download>Guardar contacto <small>.vcf ↓</small></a>
           <a class="btn sec" href="https://www.linkedin.com/in/rub%C3%A9n-palenzuela-imdisim">LinkedIn <small>→</small></a>
+        </div>
+        <button class="more" id="more" type="button" aria-expanded="false"><span>ver más</span> <i>↓</i></button>
+        <div class="xtra" id="xtra" hidden>
+          <div class="mw"><div class="mt"><b>●</b> ahora.md</div><p>Dando el giro de la logística a la IA aplicada. Abierto a proyectos donde la IA trabaje en procesos reales.</p></div>
+          <div class="mw"><div class="mt"><b>●</b> aprendiendo.md</div><p>Agentes de IA para procesos operativos · Copilot Studio · Power Automate</p></div>
+          <div class="mw"><div class="mt"><b>●</b> código abierto</div>
+            <a class="gl2" href="https://github.com/RPalGar/DORIS-starter-kit"><span>DORIS starter kit</span><small>memoria en texto plano para asistentes de IA →</small></a>
+            <a class="gl2" href="https://github.com/RPalGar"><span>GitHub</span><small>@RPalGar →</small></a>
+          </div>
         </div>
       </div>
     </div>
@@ -222,6 +245,23 @@ h1{position:relative}
   function typeJSON(){
     json.forEach((_,i)=>T(()=>{code.innerHTML=json.slice(0,i+1).join('')+(i<json.length-1?'<span class="cur"></span>':'');},i*120));
   }
+})();
+
+/* ---- segunda capa ---- */
+(()=>{
+  const b=document.getElementById('more'),x=document.getElementById('xtra');
+  b.addEventListener('pointerdown',e=>e.stopPropagation());
+  b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const open=b.getAttribute('aria-expanded')==='true';
+    b.setAttribute('aria-expanded',String(!open));
+    b.querySelector('span').textContent=open?'ver más':'ver menos';
+    const ws=[...x.querySelectorAll('.mw')];
+    if(open){ws.forEach(w=>w.classList.remove('vis'));setTimeout(()=>x.hidden=true,300);return;}
+    x.hidden=false;
+    ws.forEach((w,i)=>setTimeout(()=>w.classList.add('vis'),60+i*160));
+    setTimeout(()=>x.scrollIntoView({behavior:'smooth',block:'nearest'}),200);
+  });
 })();
 </script>
 </body>
